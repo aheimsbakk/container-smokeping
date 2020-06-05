@@ -1,0 +1,9 @@
+---
+version: "3.4"
+
+services:
+  smokeping:
+    build:
+      context: .
+    image: docker.io/aheimsbakk/smokeping
+
