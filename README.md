@@ -22,7 +22,7 @@ Container for running [Smokeping](https://oss.oetiker.ch/smokeping/). Based on [
 
 * `SLAVE_NAME`
 
-    Name of slave node, default `""`
+    Name of slave node, default `""`.
 
 ## Exposed ports
 
