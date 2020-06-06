@@ -24,10 +24,13 @@ RUN apt-get update; \
 
 EXPOSE 80
 
-VOLUME /etc/smokeping
+VOLUME /etc/smokeping \
+       /var/lib/smokeping
 
 ADD Targets /etc/smokeping/config.d/
+ADD entrypoint.sh /
 
+#RUN echo "password" > "${SHARED_SECRET}"
 RUN \
   # Apache config
   mv /usr/lib/cgi-bin/smokeping.cgi /usr/lib/cgi-bin/smokeping.fcgi; \
@@ -37,11 +40,9 @@ RUN \
   sed -i "29 i RedirectMatch '^/$' '/smokeping'" ${APACHE_CONF_FILE}; \
   # Smokeping configuration
   sed -i "/syslog/d" /etc/smokeping/config.d/General; \
-  test -f ${SHARED_SECRET} || echo password > ${SHARED_SECRET}; \
-  cp -arv /etc/smokeping /srv/; \
-  sed -Ei "s|^(MASTER=).*$|\1${MASTER}|g" /etc/default/smokeping; \
-  sed -Ei "s|^..(MASTER_URL=).*$|\1${MASTER_URL}|g" /etc/default/smokeping; \
-  sed -Ei "s|^..(SHARED_SECRET=).*$|\1${SHARED_SECRET}|g" /etc/default/smokeping; \
-  sed -Ei "s|^..(SLAVE_NAME=).*$|\1${SLAVE_NAME}|g" /etc/default/smokeping
+  echo "password" > "${SHARED_SECRET}"; \
+  cp -arv /etc/smokeping /srv/
 
-CMD dumb-init -- sh -c 'rsync -ar --existing /srv/smokeping/ /etc/smokeping/ && /etc/init.d/smokeping start && apachectl -D FOREGROUND'
+ENTRYPOINT [ "/entrypoint.sh" ]
+
+CMD [ "sh", "-c", "/etc/init.d/smokeping start && apachectl -D FOREGROUND" ]

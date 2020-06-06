@@ -6,4 +6,5 @@ services:
     build:
       context: .
     image: docker.io/aheimsbakk/smokeping
-
+    ports:
+      - "8800:80"
