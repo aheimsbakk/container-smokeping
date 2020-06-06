@@ -8,10 +8,21 @@ Container for running [Smokeping](https://oss.oetiker.ch/smokeping/). Based on [
 
 ## Environment variables
 
-* `MODE` --- Mode can be `master` or `slave`, default `master`.
-* `MASTER_URL` --- URL to master node, default `""`.
-* `SHARED_SECRET` --- File with slave secrets, default `/etc/smokeping/slavesecrets.conf`.
-* `SLAVE_NAME` -- Name of slave node, default `""`
+* `MODE`
+
+    Mode can be `master` or `slave`, default `master`.
+
+* `MASTER_URL`
+
+    URL to master node, default `""`.
+
+* `SHARED_SECRET`
+
+    File with slave secrets, default `/etc/smokeping/slavesecrets.conf`.
+
+* `SLAVE_NAME`
+
+    Name of slave node, default `""`
 
 ## Exposed ports
 
@@ -23,7 +34,7 @@ For persistence.
 
 * `/etc/smokeping`
 
-    Configuration included on run. Directory Will be populated with default configuration on first run.
+    Configuration included on run. Directory be populated with default configuration on first run.
 
 * `/var/lib/smokeping`
 
