@@ -28,7 +28,6 @@ VOLUME /etc/smokeping \
 ADD Targets /etc/smokeping/config.d/
 ADD entrypoint.sh /
 
-#RUN echo "password" > "${SHARED_SECRET}"
 RUN \
   # Apache config
   mv /usr/lib/cgi-bin/smokeping.cgi /usr/lib/cgi-bin/smokeping.fcgi; \
