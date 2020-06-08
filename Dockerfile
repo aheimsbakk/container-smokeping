@@ -2,13 +2,11 @@ FROM debian:stable-slim
 LABEL maintainer="arnulf.heimsbakk@gmail.com"
 
 ENV DEBIAN_FRONTEND=noninteractive \
-
     # Environment variables for user config
     MODE=master \
     MASTER_URL= \
     SHARED_SECRET=/etc/smokeping/slavesecrets.conf \
     SLAVE_NAME=slave\
-
     # Variables for siplifying this config
     APACHE_CONF_FILE=/etc/apache2/sites-available/000-default.conf \
     APACHE_SP_FILE=/etc/apache2/conf-available/smokeping.conf
