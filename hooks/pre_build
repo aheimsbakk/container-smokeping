@@ -1,0 +1,5 @@
+#!/bin/sh
+set -xe
+
+# Allow running different architectures on x86_64
+docker run --rm --privileged docker.io/multiarch/qemu-user-static --reset

@@ -1,4 +1,4 @@
-FROM registry.heimsbakk.no:5487/docker/debian:buster-slim
+FROM docker.io/aheimsbakk/base-debian:latest
 LABEL maintainer="arnulf.heimsbakk@gmail.com"
 
 ENV DEBIAN_FRONTEND=noninteractive \

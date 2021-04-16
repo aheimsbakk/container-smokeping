@@ -1,0 +1,7 @@
+#!/bin/sh
+set -xe
+
+# enable experimental cli
+export DOCKER_CLI_EXPERIMENTAL=enabled
+
+./build.sh "$DOCKERFILE_PATH" "$IMAGE_NAME"
