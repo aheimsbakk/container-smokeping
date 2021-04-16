@@ -86,6 +86,8 @@ do
   else
     export DOCKER_CLI_EXPERIMENTAL=enabled
     echo $DOCKER_CMD buildx build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
+    docker buildx create --name builder || return
+    docker buildx use builder || return
     docker buildx ls
     echo "$dockerfile" |
       $DOCKER_CMD buildx build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
