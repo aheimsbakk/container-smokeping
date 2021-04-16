@@ -79,12 +79,15 @@ do
   dockerfile=$(get_dockerfile "$arch" "$DOCKERFILE_PATH")
 
   cd "$(dirname "$DOCKERFILE_PATH")" || return
-  [ "$DOCKER_CMD" = "podman" ] &&
+  if [ "$DOCKER_CMD" = "podman" ]
+  then
     echo "$dockerfile" |
       $DOCKER_CMD build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
-
-  [ "$DOCKER_CMD" = "docker" ] &&
+  else
+    export DOCKER_CLI_EXPERIMENTAL=enabled
+    echo $DOCKER_CMD buildx build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
     echo "$dockerfile" |
       $DOCKER_CMD buildx build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
+  fi
 done
 
