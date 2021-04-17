@@ -57,15 +57,21 @@ then
   exit 1
 fi
 
-if which docker > /dev/null 2>&1
+if which podman > /dev/null 2>&1
 then
-  DOCKER_CMD=docker
-else
   DOCKER_CMD=podman
+else
+  DOCKER_CMD=docker
 fi
 
 # turn on multiarch for local build
-$DOCKER_CMD run --rm --privileged docker.io/multiarch/qemu-user-static --reset
+if [ "$DOCKER_CMD" = "podman" ]
+then
+  sudo $DOCKER_CMD run --rm --privileged docker.io/multiarch/qemu-user-static --reset
+else
+  $DOCKER_CMD run --rm --privileged docker.io/multiarch/qemu-user-static --reset
+fi
+
 
 # build for all architectures
 for arch in $ARCHITECTURES
