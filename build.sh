@@ -84,14 +84,14 @@ do
     echo "$dockerfile" |
       $DOCKER_CMD build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
   else
-    export DOCKER_CLI_EXPERIMENTAL=enabled
-    echo $DOCKER_CMD buildx build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
-    docker buildx rm  default || return 0
-    docker buildx create --name builder || return 0
-    docker buildx use builder || return 0
-    docker buildx ls
+    #export DOCKER_CLI_EXPERIMENTAL=enabled
+    #echo $DOCKER_CMD buildx build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
+    #docker buildx rm  default || return 0
+    #docker buildx create --name builder || return 0
+    #docker buildx use builder || return 0
+    #docker buildx ls
     echo "$dockerfile" |
-      $DOCKER_CMD buildx build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
+      $DOCKER_CMD build --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
   fi
 done
 
