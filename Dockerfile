@@ -39,7 +39,9 @@ RUN \
   sed -i "/syslog/d" /etc/smokeping/config.d/General; \
   echo "password" > "${SHARED_SECRET}"; \
   cp -arv /etc/smokeping /srv/etc_smokeping; \
-  cp -arv /var/lib/smokeping /srv/var_lib_smokeping
+  cp -arv /var/lib/smokeping /srv/var_lib_smokeping; \
+  chown smokeping:www-data /srv/var_lib_smokeping; \
+  chmod 2775 /srv/var_lib_smokeping
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 
