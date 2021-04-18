@@ -1,4 +1,4 @@
-FROM docker.io/aheimsbakk/base-debian:latest
+FROM aheimsbakk/base-debian:latest
 LABEL maintainer="arnulf.heimsbakk@gmail.com"
 
 ENV DEBIAN_FRONTEND=noninteractive \
