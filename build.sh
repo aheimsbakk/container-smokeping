@@ -58,11 +58,11 @@ then
   exit 1
 fi
 
-if which podman > /dev/null 2>&1
+if which docker > /dev/null 2>&1
 then
-  DOCKER_CMD=podman
-else
   DOCKER_CMD=docker
+else
+  DOCKER_CMD=podman
 fi
 
 # turn on multiarch for local build
