@@ -58,11 +58,11 @@ then
   exit 1
 fi
 
-if which docker > /dev/null 2>&1
+if which podman > /dev/null 2>&1
 then
-  DOCKER_CMD=docker
-else
   DOCKER_CMD=podman
+else
+  DOCKER_CMD=docker
 fi
 
 # turn on multiarch for local build
@@ -72,7 +72,6 @@ then
 else
   $DOCKER_CMD run --rm --privileged docker.io/multiarch/qemu-user-static --reset
 fi
-
 
 # build for all architectures
 for arch in $ARCHITECTURES
@@ -88,7 +87,7 @@ do
   if [ "$DOCKER_CMD" = "podman" ]
   then
     echo "$dockerfile" |
-      $DOCKER_CMD build --pull --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
+      buildah bud --pull --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
   else
     echo "$dockerfile" |
       $DOCKER_CMD build --pull --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
