@@ -4,6 +4,8 @@ rsync -ar /srv/etc_default/ /etc/default/
 rsync -ar --ignore-existing /srv/etc_smokeping/ /etc/smokeping/
 rsync -ar --ignore-existing /srv/var_lib_smokeping/ /var/lib/smokeping/
 
+chmod 644 /etc/smokeping/config.d/Targets
+
 sed -Ei "s|^(MASTER=).*$|\1${MASTER}|g" /etc/default/smokeping; \
 sed -Ei "s|^..(MASTER_URL=).*$|\1${MASTER_URL}|g" /etc/default/smokeping; \
 sed -Ei "s|^..(SHARED_SECRET=).*$|\1${SHARED_SECRET}|g" /etc/default/smokeping; \

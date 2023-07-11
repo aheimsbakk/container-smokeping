@@ -1,6 +1,6 @@
 # smokeping
 
-Container for running [Smokeping](https://oss.oetiker.ch/smokeping/). Based on [Debian stable container](https://hub.docker.com/_/debian).
+Container for running [Smokeping](https://oss.oetiker.ch/smokeping/). Based on [Ubuntu](https://hub.docker.com/_/ubuntu).
 
 ## Tags
 
@@ -47,6 +47,8 @@ docker run -d \
   -v /srv/smokeping/config:/etc/smokeping \
   -v /srv/smokeping/data:/var/lib/smokeping \
   -p 80:80 \
+  --cap-add net_raw \
+  --cap-add net_admin \
   --name smokeping \
   aheimsbakk/smokeping
 ```

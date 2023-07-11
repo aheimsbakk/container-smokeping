@@ -1,4 +1,4 @@
-FROM aheimsbakk/base-debian:latest
+FROM ubuntu:lunar
 LABEL maintainer="arnulf.heimsbakk@gmail.com"
 
 ENV DEBIAN_FRONTEND=noninteractive \
