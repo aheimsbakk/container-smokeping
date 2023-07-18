@@ -1,4 +1,5 @@
-FROM ubuntu:lunar
+FROM docker/ubuntu:20.04
+# FROM debian:buster
 LABEL maintainer="arnulf.heimsbakk@gmail.com"
 
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -13,6 +14,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update; \
     apt-get install -y \
+      ca-certificates \
       dumb-init \
       libapache2-mod-fcgid \
       rsync \
@@ -27,7 +29,10 @@ VOLUME /etc/smokeping \
 
 ADD Targets /etc/smokeping/config.d/
 ADD entrypoint.sh /
+ADD fcgid.conf /etc/apache2/mods-enabled/fcgid.conf
+COPY *.crt /usr/local/share/ca-certificates/
 
+RUN /usr/sbin/update-ca-certificates
 RUN \
   # Apache config
   mv /usr/lib/cgi-bin/smokeping.cgi /usr/lib/cgi-bin/smokeping.fcgi; \
@@ -40,9 +45,10 @@ RUN \
   echo "password" > "${SHARED_SECRET}"; \
   cp -arv /etc/default /srv/etc_default; \
   cp -arv /etc/smokeping /srv/etc_smokeping; \
-  cp -arv /var/lib/smokeping /srv/var_lib_smokeping; \
-  chown smokeping:www-data /srv/var_lib_smokeping; \
-  chmod 2775 /srv/var_lib_smokeping
+  cp -arv /var/lib/smokeping /srv/var_lib_smokeping
+  # chown smokeping:www-data /srv/var_lib_smokeping; \
+  # chown smokeping:www-data /srv/etc_smokeping; \
+  # chmod 2775 /srv/var_lib_smokeping
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 
