@@ -54,6 +54,8 @@ docker run -d \
   -v /srv/smokeping/data:/var/lib/smokeping \
   -p 80:80 \
   --name smokeping \
+  --cap-add net_admin \
+  --cap-add net_raw \
   aheimsbakk/smokeping
 ```
 

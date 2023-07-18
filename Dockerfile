@@ -1,6 +1,9 @@
-FROM docker/ubuntu:20.04
-# FROM debian:buster
-LABEL maintainer="arnulf.heimsbakk@gmail.com"
+FROM aheimsbakk/base-debian:latest
+LABEL org.opencontainers.image.authors="arnulf.heimsbakk@gmail.com"
+
+# sysctl -w net.ipv4.ping_group_range="0 2147483647"
+# /usr/bin/fping -C 20  -B1 -r1 -4 -i10 8.8.4.4 google.com youtube.com 8.8.8.8
+# --cap-add net_admin --cap-add net_raw
 
 ENV DEBIAN_FRONTEND=noninteractive \
     # Environment variables for user config
@@ -30,7 +33,6 @@ VOLUME /etc/smokeping \
 ADD Targets /etc/smokeping/config.d/
 ADD entrypoint.sh /
 ADD fcgid.conf /etc/apache2/mods-enabled/fcgid.conf
-COPY *.crt /usr/local/share/ca-certificates/
 
 RUN /usr/sbin/update-ca-certificates
 RUN \
