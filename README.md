@@ -1,10 +1,16 @@
 # smokeping
 
-Container for running [Smokeping](https://oss.oetiker.ch/smokeping/). Based on [Ubuntu](https://hub.docker.com/_/ubuntu).
+Container for running [Smokeping](https://oss.oetiker.ch/smokeping/). Based on [Debian stable container](https://hub.docker.com/_/debian). Original source: https://github.com/aheimsbakk/container-smokeping.
+
+Used for smokeping service running on service klynge.
 
 ## Tags
 
-* latest ([Dockerfiler](//github.com/aheimsbakk/smokeping/blob/master/Dockerfile))
+* `latest` ([Dockerfiler](//github.com/aheimsbakk/smokeping/blob/master/Dockerfile))
+
+## Build
+
+* Every week.
 
 ## Environment variables
 
@@ -42,14 +48,22 @@ For persistence.
 
 ## How to use this container
 
+Allow unprivileged ping.
+
+```bash
+sudo sysctl -w net.ipv4.ping_group_range="0 2147483647"
 ```
+
+Start container.
+
+```bash
 docker run -d \
   -v /srv/smokeping/config:/etc/smokeping \
   -v /srv/smokeping/data:/var/lib/smokeping \
   -p 80:80 \
-  --cap-add net_raw \
-  --cap-add net_admin \
   --name smokeping \
+  --cap-add net_admin \
+  --cap-add net_raw \
   aheimsbakk/smokeping
 ```
 
