@@ -48,7 +48,15 @@ For persistence.
 
 ## How to use this container
 
+Allow unprivileged ping.
+
+```bash
+sudo sysctl -w net.ipv4.ping_group_range="0 2147483647"
 ```
+
+Start container.
+
+```bash
 docker run -d \
   -v /srv/smokeping/config:/etc/smokeping \
   -v /srv/smokeping/data:/var/lib/smokeping \
