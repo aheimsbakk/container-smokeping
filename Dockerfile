@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     # Environment variables for user config
     MODE=master \
     MASTER_URL= \
-    SHARED_SECRET=/etc/smokeping/slavesecrets.conf \
+    SHARED_SECRET_FILE=/etc/smokeping/slavesecrets.conf \
     SLAVE_NAME=slave\
     # Variables for siplifying this config
     APACHE_CONF_FILE=/etc/apache2/sites-available/000-default.conf \
@@ -44,7 +44,7 @@ RUN \
   sed -i "29 i RedirectMatch '^/$' '/smokeping'" ${APACHE_CONF_FILE}; \
   # Smokeping configuration
   sed -i "/syslog/d" /etc/smokeping/config.d/General; \
-  echo "password" > "${SHARED_SECRET}"; \
+  echo "password" > "${SHARED_SECRET_FILE}"; \
   cp -arv /etc/default /srv/etc_default; \
   cp -arv /etc/smokeping /srv/etc_smokeping; \
   cp -arv /var/lib/smokeping /srv/var_lib_smokeping
