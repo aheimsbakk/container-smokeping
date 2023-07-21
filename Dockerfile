@@ -21,36 +21,38 @@ RUN apt-get update; \
       dumb-init \
       libapache2-mod-fcgid \
       rsync \
+      sed \
       smokeping \
       ; \
     apt-get clean;
-
-EXPOSE 80
-
-VOLUME /etc/smokeping \
-       /var/lib/smokeping
 
 ADD Targets /etc/smokeping/config.d/
 ADD entrypoint.sh /
 ADD fcgid.conf /etc/apache2/mods-enabled/fcgid.conf
 
 RUN /usr/sbin/update-ca-certificates
-RUN \
-  # Apache config
-  mv /usr/lib/cgi-bin/smokeping.cgi /usr/lib/cgi-bin/smokeping.fcgi; \
+
+# Apache config
+RUN mv /usr/lib/cgi-bin/smokeping.cgi /usr/lib/cgi-bin/smokeping.fcgi; \
   sed -Ei "s|^(ScriptAlias).*|\1 /smokeping/smokeping.cgi /usr/lib/cgi-bin/smokeping.fcgi|g" $APACHE_SP_FILE; \
   sed -Ei "s|^(.*ErrorLog).*$|\1 /dev/stderr|g" ${APACHE_CONF_FILE}; \
   sed -Ei "s|^(.*CustomLog).*$|\1 /dev/stdout combined|g" ${APACHE_CONF_FILE}; \
-  sed -i "29 i RedirectMatch '^/$' '/smokeping'" ${APACHE_CONF_FILE}; \
-  # Smokeping configuration
-  sed -i "/syslog/d" /etc/smokeping/config.d/General; \
-  echo "password" > "${SHARED_SECRET_FILE}"; \
-  cp -arv /etc/default /srv/etc_default; \
+  sed -i "29 i RedirectMatch '^/$' '/smokeping'" ${APACHE_CONF_FILE}
+
+# Smokeping config
+RUN sed -i "/syslog/d" /etc/smokeping/config.d/General; \
+  sed -i "1 i precreateperms = 775" /etc/smokeping/config.d/pathnames; \
+  echo 'password' > ${SHARED_SECRET_FILE}
+
+# Prepare for mounted dirs
+RUN cp -arv /etc/default /srv/etc_default; \
   cp -arv /etc/smokeping /srv/etc_smokeping; \
   cp -arv /var/lib/smokeping /srv/var_lib_smokeping
-  # chown smokeping:www-data /srv/var_lib_smokeping; \
-  # chown smokeping:www-data /srv/etc_smokeping; \
-  # chmod 2775 /srv/var_lib_smokeping
+
+EXPOSE 80
+
+VOLUME /etc/smokeping \
+       /var/lib/smokeping
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 
