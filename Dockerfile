@@ -5,6 +5,8 @@ LABEL org.opencontainers.image.authors="arnulf.heimsbakk@gmail.com"
 # /usr/bin/fping -C 20  -B1 -r1 -4 -i10 8.8.4.4 google.com youtube.com 8.8.8.8
 # --cap-add net_admin --cap-add net_raw
 
+ENV LD_PRELOAD libeatmydata.so
+
 ENV DEBIAN_FRONTEND=noninteractive \
     # Environment variables for user config
     MODE=master \
@@ -15,8 +17,14 @@ ENV DEBIAN_FRONTEND=noninteractive \
     APACHE_CONF_FILE=/etc/apache2/sites-available/000-default.conf \
     APACHE_SP_FILE=/etc/apache2/conf-available/smokeping.conf
 
+
 RUN apt-get update; \
     apt-get install -y \
+      eatmydata \
+      ; \
+    apt-get clean;
+
+RUN apt-get install -y \
       ca-certificates \
       dumb-init \
       libapache2-mod-fcgid \
