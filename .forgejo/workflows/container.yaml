@@ -18,22 +18,10 @@ jobs:
     strategy:
       matrix:
         container:
-          - extra_args: --build-arg=DEBIAN_RELEASE="bookworm"
-            tags: bookworm latest
+          - extra_args: ""
+            tags: latest ${{ github.sha }}
             platform: linux/amd64,linux/arm64,linux/arm
-            containerfile: Containerfile
-          - extra_args: --build-arg=DEBIAN_RELEASE="bookworm-slim"
-            tags: bookworm-slim
-            platform: linux/amd64,linux/arm64,linux/arm
-            containerfile: Containerfile
-          - extra_args: --build-arg=DEBIAN_RELEASE="trixie"
-            tags: trixie
-            platform: linux/amd64,linux/arm64,linux/arm
-            containerfile: Containerfile
-          - extra_args: --build-arg=DEBIAN_RELEASE="trixie-slim"
-            tags: trixie-slim
-            platform: linux/amd64,linux/arm64,linux/arm
-            containerfile: Containerfile
+            containerfile: Dockerfile
 
     env:
       STORAGE_DRIVER: vfs

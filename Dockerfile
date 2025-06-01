@@ -15,8 +15,14 @@ ENV DEBIAN_FRONTEND=noninteractive \
     APACHE_CONF_FILE=/etc/apache2/sites-available/000-default.conf \
     APACHE_SP_FILE=/etc/apache2/conf-available/smokeping.conf
 
+
 RUN apt-get update; \
     apt-get install -y \
+      eatmydata \
+      ; \
+    apt-get clean;
+
+RUN eatmydata apt-get install -y \
       ca-certificates \
       dumb-init \
       libapache2-mod-fcgid \
