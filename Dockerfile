@@ -5,8 +5,6 @@ LABEL org.opencontainers.image.authors="arnulf.heimsbakk@gmail.com"
 # /usr/bin/fping -C 20  -B1 -r1 -4 -i10 8.8.4.4 google.com youtube.com 8.8.8.8
 # --cap-add net_admin --cap-add net_raw
 
-ENV LD_PRELOAD libeatmydata.so
-
 ENV DEBIAN_FRONTEND=noninteractive \
     # Environment variables for user config
     MODE=master \
@@ -24,7 +22,7 @@ RUN apt-get update; \
       ; \
     apt-get clean;
 
-RUN apt-get install -y \
+RUN eatmydata apt-get install -y \
       ca-certificates \
       dumb-init \
       libapache2-mod-fcgid \
