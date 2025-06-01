@@ -1,0 +1,84 @@
+---
+on:
+  push:
+    paths:
+      - '**/*.yaml'
+      - '**/*.yml'
+      - 'Containerfile'
+      - 'Dockerfile'
+  workflow_dispatch:
+  schedule:
+  - cron: '0 23 * * *'
+
+jobs:
+  build-container:
+    runs-on: docker
+    container:
+      image: vel.heimsbakk.no/containers/runner-debian:latest
+    strategy:
+      matrix:
+        container:
+          - extra_args: --build-arg=DEBIAN_RELEASE="bookworm"
+            tags: bookworm latest
+            platform: linux/amd64,linux/arm64,linux/arm
+            containerfile: Containerfile
+          - extra_args: --build-arg=DEBIAN_RELEASE="bookworm-slim"
+            tags: bookworm-slim
+            platform: linux/amd64,linux/arm64,linux/arm
+            containerfile: Containerfile
+          - extra_args: --build-arg=DEBIAN_RELEASE="trixie"
+            tags: trixie
+            platform: linux/amd64,linux/arm64,linux/arm
+            containerfile: Containerfile
+          - extra_args: --build-arg=DEBIAN_RELEASE="trixie-slim"
+            tags: trixie-slim
+            platform: linux/amd64,linux/arm64,linux/arm
+            containerfile: Containerfile
+
+    env:
+      STORAGE_DRIVER: vfs
+      BUILDAH_FORMAT: docker
+      BUILDAH_ISOLATION: chroot
+
+    steps:
+      - name: Get container registry path
+        run: | 
+          REGISTRY_PATH=${{ github.server_url }}
+          REGISTRY_PATH=$(echo ${REGISTRY_PATH} | sed "s#https://##g")/${{ github.repository_owner }}
+          echo REGISTRY_PATH=${REGISTRY_PATH} >> $GITHUB_ENV
+
+      - name: Get repository name
+        run: | 
+          IMAGE_NAME=${{ github.repository }}
+          REPO_OWNER=${{ github.repository_owner }}
+          IMAGE_NAME=$(echo ${IMAGE_NAME} | sed "s#${REPO_OWNER}/##g")
+          IMAGE_NAME=$(echo ${IMAGE_NAME} | sed "s#container-##g")
+          echo IMAGE_NAME=${IMAGE_NAME} >> $GITHUB_ENV
+
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Buildah build for all platforms
+        run: |
+          buildah build ${{ matrix.container.extra_args }} \
+            --platform ${{ matrix.container.platform }} \
+            --manifest image \
+            -f ${{ matrix.container.containerfile }}
+
+      - name: Registry login
+        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
+        run: |
+          echo "${{ secrets.REGISTRY_PASS }}" | \
+            buildah login \
+              -u "${{ secrets.REGISTRY_USER }}" \
+              --password-stdin ${{ env.REGISTRY_PATH }}
+
+      - name: Registry push
+        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
+        run: |
+          for tag in ${{ matrix.container.tags }}; do
+            buildah manifest push --all \
+              localhost/image \
+              docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${tag}
+            echo Pushed to ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${tag}
+          done

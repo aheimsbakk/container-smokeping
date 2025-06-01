@@ -1,4 +1,4 @@
-FROM aheimsbakk/base-debian:latest
+FROM vel.heimsbakk.no/containers/debian-base:latest
 LABEL org.opencontainers.image.authors="arnulf.heimsbakk@gmail.com"
 
 # sysctl -w net.ipv4.ping_group_range="0 2147483647"
