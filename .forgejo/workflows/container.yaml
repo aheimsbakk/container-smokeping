@@ -19,7 +19,7 @@ jobs:
       matrix:
         container:
           - extra_args: ""
-            tags: latest ${{ github.sha }}
+            tags: latest
             platform: linux/amd64,linux/arm64,linux/arm
             containerfile: Dockerfile
 
@@ -66,7 +66,33 @@ jobs:
         run: |
           for tag in ${{ matrix.container.tags }}; do
             buildah manifest push --all \
+              --compression-format gzip --compression-level 9 \
               localhost/image \
               docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${tag}
             echo Pushed to ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${tag}
+          done
+
+      - name: Docker login
+        if: |
+          vars.DOCKER_PUSH &&
+          ( github.ref == 'refs/heads/main' || github.event_name == 'schedule' )
+        run: |
+          echo Docker login
+          echo "${{ secrets.DOCKER_PASS }}" | \
+            buildah login \
+              -u "${{ secrets.DOCKER_USER }}" \
+              --password-stdin ${{ secrets.DOCKER_REGISTRY }}
+
+      - name: Docker push
+        if: | 
+          vars.DOCKER_PUSH &&
+          ( github.ref == 'refs/heads/main' || github.event_name == 'schedule' )
+        run: |
+          echo Docker push
+          for tag in ${{ matrix.container.tags }}; do
+            buildah manifest push --all \
+              --compression-format gzip --compression-level 9 \
+              localhost/image \
+              docker://${{ secrets.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${tag}
+            echo Pushed to ${{ secrets.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${tag}
           done
