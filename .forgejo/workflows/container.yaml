@@ -66,6 +66,7 @@ jobs:
         run: |
           for tag in ${{ matrix.container.tags }}; do
             buildah manifest push --all \
+              --compression-format zstd --compression-level 9 \
               localhost/image \
               docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${tag}
             echo Pushed to ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${tag}
@@ -90,6 +91,7 @@ jobs:
           echo Docker push
           for tag in ${{ matrix.container.tags }}; do
             buildah manifest push --all \
+              --compression-format zstd --compression-level 9 \
               localhost/image \
               docker://${{ secrets.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${tag}
             echo Pushed to ${{ secrets.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${tag}
