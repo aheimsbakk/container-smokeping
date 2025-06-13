@@ -42,14 +42,15 @@ jobs:
 
   build-container:
     runs-on: "${{ vars.RUNS_ON }}"
-    name: ${{ matrix.container.build-args }}
+    name: ${{ matrix.container.name }}
     needs: set-vars
     permissions:
       packages: write
     strategy:
       matrix:
         container:
-          - build-args: |
+          - name: smokeping
+            build-args: |
               RELEASE=bookworm
               BASE=${{ needs.set-vars.outputs.registry-name }}/${{ github.repository_owner }}/debian-base
             tags: |
