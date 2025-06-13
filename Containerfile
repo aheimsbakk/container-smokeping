@@ -1,4 +1,4 @@
-ARG BASE=vel.heimsbakk.no/containers/debian-base
+ARG BASE=docker.io/debian
 ARG RELEASE=latest
 
 FROM ${BASE}:${RELEASE}
