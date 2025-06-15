@@ -38,12 +38,11 @@ jobs:
           echo "container-name=${CONTAINER_NAME}" >> "$GITHUB_OUTPUT"
           echo "Set container-name to: ${CONTAINER_NAME}"
           echo  "Runs on: ${{ vars.RUNS_ON }}"
-          sleep 5
 
   build-container:
     runs-on: "${{ vars.RUNS_ON }}"
-    name: ${{ matrix.container.name }}
     needs: set-vars
+    name: ${{ matrix.container.name }}
     permissions:
       packages: write
     strategy:
