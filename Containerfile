@@ -1,5 +1,6 @@
-ARG BASE=docker.io/debian
+ARG BASE=vel.heimsbakk.no/containers/debian-base
 ARG RELEASE=latest
+
 
 FROM ${BASE}:${RELEASE}
 LABEL org.opencontainers.image.authors="arnulf.heimsbakk@gmail.com"
