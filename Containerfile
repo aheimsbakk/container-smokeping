@@ -66,3 +66,5 @@ VOLUME /etc/smokeping \
 ENTRYPOINT [ "/entrypoint.sh" ]
 
 CMD [ "sh", "-c", "/etc/init.d/smokeping start && apachectl -D FOREGROUND" ]
+
+# Updated 2025-08-27
