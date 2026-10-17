@@ -51,7 +51,7 @@ jobs:
         container:
           - name: smokeping
             build-args: |
-              RELEASE=bookworm
+              RELEASE=trixie
               BASE=${{ needs.set-vars.outputs.registry-name }}/${{ github.repository_owner }}/debian-base
             tags: |
               ${{ needs.set-vars.outputs.registry-name }}/${{ github.repository_owner }}/${{ needs.set-vars.outputs.container-name }}:latest
